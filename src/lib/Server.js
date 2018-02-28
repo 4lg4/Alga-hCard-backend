@@ -79,26 +79,19 @@ export default class Server {
     _initializeServerRoutes(){
         app.get('/', async (req, res)=>{
             const uid = this._getUid(req, res);
-            const [error, hCardProps] = await aap(this.getFrontend({ uid }));
+            const [error, html] = await aap(this.getFrontend({ uid }));
+
+            console.log('_initializeServerRoutes', error, html);
 
             if(error){
                 return this._error({ req, res, message: error });
             }
 
-            if(!hCardProps) {
-                return this._error({ req, res, message: 'Missing hCardProps' });
+            if(!html) {
+                return this._error({ req, res, message: 'Missing html' });
             }
 
-            // EJS version (test / development)
-            return res.render('index', { hCardProps: JSON.stringify(hCardProps) }, (error, html) => {
-                if (error) {
-                    return this._error({ req, res, message: error });
-                }
-
-                return this._success({ req, res, html });
-            });
-
-            // return this._success({ req, res, html });
+            return this._success({ req, res, html });
         });
 
         app.post('/update', async (req, res)=>{

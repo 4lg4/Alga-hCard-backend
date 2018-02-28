@@ -63,8 +63,7 @@ server.getFrontend = async ({ uid, message })=>{
     // })();
 
     // return resolve(htmlTemplate({ content }));
-
-    return resolve(result);
+    return resolve(renderToString(<App />));
 };
 
 
