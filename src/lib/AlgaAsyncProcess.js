@@ -9,3 +9,12 @@ export default async (promise) => {
         return [err];
     }
 };
+
+
+module.exports.reject = (messsage)=>{
+    return Promise.reject(messsage);
+};
+
+module.exports.resolve = (data)=>{
+    return Promise.resolve(data);
+};

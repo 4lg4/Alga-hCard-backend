@@ -2,68 +2,95 @@
  * Created by www.Alga.me on 27/2/18.
  */
 
-import express from 'express';
-import bodyParser from 'body-parser';
-import ejs from 'ejs';
-import path from 'path';
 
-import env from 'env.json';
+import Server from './lib/Server';
+import MongoDriver from './lib/MongoDriver';
+import env from './env.json';
+import aap, { reject, resolve } from './lib/AlgaAsyncProcess';
+
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+import App from './lib/App';
+import htmlTemplate from './lib/htmlTemplate';
 
 
-if(env) {
+// console.log(aap, reject, resolve);
 
-}
+// if(env) {
+//
+// }
 
-// const cookieParser = require('cookie-parser');
+const db = new MongoDriver(env.drivers.mongodb);
 
-const app = express();
-// app.set('view engine', 'jade');
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-// app.use(cookieParser());
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
+const server = new Server({
+    env,
+    port: process.env.PORT || false
 });
 
+server.getFrontend = async ({ uid, message })=>{
+    let [err,result] = await aap(db.get({ id: uid }));
+    if(err){
+        return reject(err);
+    }
 
-app.use('/', express.static(path.join(__dirname, 'frontend')));
-app.set('views', path.join(__dirname, 'frontend'));
-app.set('view engine', 'ejs');
-app.get('/', (req, res)=>{
-    const hCardProps = JSON.stringify({
-        givenName: 'Sam',
-        surname: 'Fairfax',
-        email: 'sam.fairfax@fairfaxmedia.com.au',
-        phone: '0292822833',
-        houseNumber: '100',
-        street: 'Harris Street',
-        suburb: 'Pyrmont',
-        state: 'NSW',
-        postcode: '2009',
-        country: 'Australia'
-    });
+    result = (result && result.data) ? result.data : {};
+    result.id = uid;
 
-    res.render('index', { hCardProps }, (error, html)=>{
-        if(error){
-            return res.status(500).send({ error });
-        }
+    console.log('getFrontend:', uid);
+    console.log('getFrontend:', message);
+    console.log('getFrontend:', result);
 
-        res.send(html);
-    });
-});
+    // const body = renderToString(<div class="HcardApp" />);
+    // const content = renderToString(
+    //     React.createElement(
+    //         window.hCard.default,
+    //         hCardProps
+    //     ),
+    //     document.querySelector('.HcardApp')
+    // );
 
-app.post('/update', (req, res)=>{
-    console.log(req.body);
-    res.send('OK');
-});
+    // var hCardProps = ${hCardProps};
+    // console.log('hCardProps', hCardProps);
+    //
+    // (function() {
+    //     ReactDOM.render(
+    //         React.createElement(
+    //             window.hCard.default,
+    //             hCardProps
+    //         ),
+    //         document.querySelector('.HcardApp')
+    //     );
+    // })();
 
-app.post('/submit', (req, res)=>{
-    console.log(req.body);
-    res.send('OK');
-});
+    // return resolve(htmlTemplate({ content }));
 
-app.listen(process.env.PORT || 3000, ()=>{
-    console.log(`App listening on port ${process.env.PORT || 3000}!`);
-});
+    return resolve(result);
+};
+
+
+server.onUpdate = async ({ payload, uid })=>{
+    const [errGet,resultGet] = await aap(db.get({ id: uid }));
+    if(errGet || !resultGet){
+        return reject('No user found');
+    }
+
+    const [err,result] = await aap(db.set({ id: uid, data: payload }));
+    if(err){
+        return reject(err);
+    }
+
+    console.log('onUpdate:', result);
+
+    return resolve(true);
+};
+
+server.onSubmit = async ({ payload, uid })=>{
+    const [err,result] = await aap(db.set({ id: uid, data: payload }));
+    if(err){
+        return reject(err);
+    }
+
+    console.log('onSubmit:', result);
+
+    return resolve(true);
+};

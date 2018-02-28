@@ -29,9 +29,7 @@ export default class MongoDriver {
         this.model = mongodb.model('hCard', this.props.schema);
     }
 
-    async set(data) {
-
-        const { id } = data;
+    async set({ id, data }) {
         if(err){
             throw new Error('id is required');
         }
@@ -89,6 +87,7 @@ export default class MongoDriver {
         return item;
     }
 
+    // TODO: implement
     async destroy(data){
         if(!data) {
             throw new Error('id is required');
@@ -111,7 +110,7 @@ export default class MongoDriver {
             userCreds = `${this.props.user}:${this.props.pwd}@`;
         }
 
-        return `${userCreds}mongodb://${this.props.host}:${this.props.port}/${this.props.db}`;
+        return `mongodb://${userCreds}${this.props.host}:${this.props.port}/${this.props.db}`;
     }
 
     async _getConn(){
