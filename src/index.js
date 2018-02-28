@@ -11,7 +11,9 @@ import aap, { reject, resolve } from './lib/AlgaAsyncProcess';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import App from './lib/App';
-import htmlTemplate from './lib/htmlTemplate';
+// import main from './frontend/main';
+// import Index from './frontend/index.html';
+// import htmlTemplate from './lib/htmlTemplate';
 
 
 // console.log(aap, reject, resolve);
@@ -41,13 +43,14 @@ server.getFrontend = async ({ uid, message })=>{
     console.log('getFrontend:', result);
 
     // const body = renderToString(<div class="HcardApp" />);
-    // const content = renderToString(
-    //     React.createElement(
-    //         window.hCard.default,
-    //         hCardProps
-    //     ),
-    //     document.querySelector('.HcardApp')
-    // );
+    const content = renderToString(
+        <div class="HcardApp" />
+        // React.createElement(
+        //     window.hCard.default,
+        //     hCardProps
+        // ),
+        // document.querySelector('.HcardApp')
+    );
 
     // var hCardProps = ${hCardProps};
     // console.log('hCardProps', hCardProps);
