@@ -5,7 +5,19 @@ Alga hCard backend implementation
 ````bash
     npm install
 ````
-
+add creds in the config file /src/env.json
+```json
+{
+  "drivers": {
+    "mongodb": {
+      // ...
+    },
+    "api": {
+       // ...
+    }
+  }
+}
+```
 #### Production
 1) build the project
 ````bash
