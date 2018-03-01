@@ -1,0 +1,57 @@
+{
+  "name": "Alga-hCard-backend",
+  "version": "1.0.0",
+  "description": "Alga hCard backend implementation",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start-local": "node dist/index.js",
+    "dev": "node --harmony --require babel-register src/index.js",
+    "test": "mocha ./test/**/* --compilers js:babel-core/register",
+    "build": "gulp",
+    "dockerizeme": "docker build -t alga-hcard:latest ./",
+    "docker-dev": "docker container rm alga-hcard -f || echo 'already removed' && docker container run -d -p $PORT:3000 -e env=crazy --name alga-hcard alga-hcard:latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4lg4/Alga-hCard-backend.git"
+  },
+  "keywords": [],
+  "author": "Alga.me",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/4lg4/Alga-hCard-backend/issues"
+  },
+  "homepage": "https://github.com/4lg4/Alga-hCard-backend#readme",
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "mongoose": "^5.0.7",
+    "prop-types": "^15.6.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.2",
+    "babel-loader": "^7.1.3",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "body-parser": "^1.18.2",
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "eslint": "^4.18.1",
+    "eslint-config-google": "^0.9.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "mocha": "^5.0.1",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.9"
+  }
+}
