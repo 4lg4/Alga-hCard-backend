@@ -6,7 +6,7 @@
  */
 
 import mongodb from 'mongoose';
-import aap from './AlgaAsyncProcess';
+import aap, {resolve, reject} from './AlgaAsyncProcess';
 
 // Use native promises
 mongodb.Promise = global.Promise;
@@ -42,11 +42,19 @@ export default class MongoDriver {
 
         // update record
         if(item) {
+            // console.log('####### set', { id }, { data });
+            // console.log('####### set 2', item.data, data);
+            // console.log('####### set 22', {id}, { data: Object.assign({}, item.data, data) });
+
+            // this.model.findOne({ id },(err,model)=>{
+            //     console.log('####### set 22222222', err,model);
+            //
+            //     model.set({ data });
+            //     model.save((err, success)=>console.log('####### set 33333', err,success));
+            // });
+
             const [errUpdateItem, updated] = await aap(
-                this.model.update(
-                    { id },
-                    Object.assign({},item,data)
-                )
+                this.model.update({ id: id }, { data: Object.assign({}, item.data, data) } )
             );
 
             if(errUpdateItem){
@@ -84,10 +92,10 @@ export default class MongoDriver {
             return false;
         }
 
-        return item;
+        return { id, data: item.data };
     }
 
-    // TODO: implement
+    // TODO: verify error here
     async destroy(data){
         if(!data) {
             throw new Error('id is required');
@@ -95,9 +103,11 @@ export default class MongoDriver {
 
         const id = (typeof data === 'string') ? data : data.id;
 
+        // const [err, item] = await aap(this.model.find({ id }).remove());
         const [err, item] = await aap(this.model.find({ id }).remove());
         if(err){
-            throw new Error(err);
+            // throw new Error(err);
+            resolve(err);
         }
 
         return true;

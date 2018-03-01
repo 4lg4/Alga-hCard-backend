@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import path from 'path';
+import { URL } from 'url';
 
 import aap from './AlgaAsyncProcess';
 import auid from './AlgaUID';
@@ -21,10 +22,6 @@ export default class Server {
     constructor(props = {}) {
         this.props = props;
         this.props.port = this.props.port || defaults.port;
-        // console.log('PROPS ', defaults);
-        // console.log('PROPS ', props);
-        // console.log('PROPS ', this.props);
-
         this._initializeServer();
     }
 
@@ -64,7 +61,7 @@ export default class Server {
 
     _getUid(req, res){
         // cookie session id
-        let uid = req.cookies['__[hCard]__'];
+        let uid = req.cookies['__[hCard]__'] || new URL(req.headers.referer).searchParams.get('s'); // added session id as a query string because the update call wasn't sending the cookies in the headers
         if(!uid) {
             uid = auid();
             res.cookie('__[hCard]__', uid, {
@@ -79,6 +76,12 @@ export default class Server {
     _initializeServerRoutes(){
         app.get('/', async (req, res)=>{
             const uid = this._getUid(req, res);
+
+            // added session id as a query string because the update call wasn't sending the cookies in the headers
+            if(!req.query.s) {
+                return res.redirect(`/?s=${uid}`);
+            }
+
             const [error, hCardProps] = await aap(this.getFrontend({ uid }));
 
             if(error){
@@ -89,7 +92,6 @@ export default class Server {
                 return this._error({ req, res, message: 'Missing hCardProps' });
             }
 
-            // EJS version (test / development)
             return res.render('index', { hCardProps: JSON.stringify(hCardProps) }, (error, html) => {
                 if (error) {
                     return this._error({ req, res, message: error });
@@ -97,17 +99,9 @@ export default class Server {
 
                 return this._success({ req, res, html });
             });
-
-            // return this._success({ req, res, html });
         });
 
         app.post('/update', async (req, res)=>{
-            console.log('\n\n\n');
-            console.log('onUpdate headers', req.headers);
-            console.log('onUpdate query', req.query);
-            console.log('onUpdate body', req.body);
-
-
             const uid = this._getUid(req, res);
             const [error, message] = await aap(this.onUpdate({ payload: req.body, uid }));
 
@@ -119,20 +113,17 @@ export default class Server {
         });
 
         app.post('/submit', async (req, res)=>{
-            console.log('\n\n\n');
-            console.log('onSubmit headers', req.headers);
-            console.log('onSubmit query', req.query);
-            console.log('onSubmit body', req.body);
-
             const uid = this._getUid(req, res);
-            const [error, message] = await aap(this.onSubmit({ payload: req.body, uid }));
+            const [error, html] = await aap(this.onSubmit({ payload: req.body, uid }));
 
             if(error){
                 return this._error({ req, res, message: error });
             }
 
-            // return this.getFrontend(message);
-            res.redirect('/');
+            res.set('Content-Disposition', 'inline');
+            res.set('Content-Disposition', 'attachment');
+            res.set('Content-Disposition', `attachment; filename="${uid}.hcard"`);
+            res.send(html);
         });
     }
 }

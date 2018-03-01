@@ -34,28 +34,76 @@ describe(`MongoDriver this test only works with a valid Mongo DB ${JSON.stringif
 
 
     describe('_getConn', ()=> {
-        it(`should return true opened connection`, () => {
-            assert.equal(false,true);
+        it(`should return true after open connection`, async () => {
+            const mongoDriver = new MongoDriver(connectionVars);
+            const [err, result] = await aap(mongoDriver._getConn());
+            assert.equal(result,true);
         });
     });
 
     describe('get', ()=> {
-        it(`should return an object from the db`, () => {
-            assert.equal(false,true);
+        const id = '12';
+        const data = {
+            id,
+            giveName: 'Adriano',
+            lastName: 'Leal'
+        };
+
+        it(`should return an object from the db`, (done) => {
+            const mongoDriver = new MongoDriver(connectionVars);
+
+            // const [errDestroy, resultDestroy] = await aap(mongoDriver.destroy({ id }));
+            // const [errSet, resultSet] = await aap(mongoDriver.set({ id, data }));
+            // const [errGet, resultGet] = await aap(mongoDriver.get({ id }));
+            // const [err, res] = await aap(assert.deepEqual(resultGet,{ id, data }));
+
+            Promise
+                .resolve()
+                .then(()=>mongoDriver.set({ id, data }))
+                .then(()=>mongoDriver.get({ id }))
+                .then((result)=>{
+                    assert.deepEqual(result,{ id, data });
+                    done();
+                })
         });
     });
 
-    describe('set', ()=> {
-        it(`should return true`, () => {
-            assert.equal(false,true);
-        });
-    });
-
-    describe('destroy', ()=> {
-        it(`should return true`, () => {
-            assert.equal(false,true);
-        });
-    });
+    // describe('set', (done)=> {
+    //     it(`should add new record and return true`, async () => {
+    //         const mongoDriver = new MongoDriver(connectionVars);
+    //         const id = '12';
+    //         const data = {
+    //             id,
+    //             giveName: 'Adriano',
+    //             lastName: 'Leal'
+    //         };
+    //
+    //         const [errDestroy, resultDestroy] = await aap(mongoDriver.destroy({ id }));
+    //         const [errSet, resultSet] = await aap(mongoDriver.set({ id, data }));
+    //         const [errGet, resultGet] = await aap(mongoDriver.get({ id }));
+    //         done(assert.deepEqual(resultGet,{ id, data }));
+    //     });
+    //
+    //     it(`should update an existing record and return true`, async (done) => {
+    //         const mongoDriver = new MongoDriver(connectionVars);
+    //         const id = '12';
+    //         const data = {
+    //             id,
+    //             org: 'Alga.Me'
+    //         };
+    //
+    //         const [errDestroy, resultDestroy] = await aap(mongoDriver.destroy({ id }));
+    //         const [errSet, resultSet] = await aap(mongoDriver.set({ id, data }));
+    //         const [errGet, resultGet] = await aap(mongoDriver.get({ id }));
+    //         done(assert.deepEqual(resultGet,{ id, data }));
+    //     });
+    // });
+    //
+    // describe('destroy', ()=> {
+    //     it(`should return true`, () => {
+    //         assert.equal(false,true);
+    //     });
+    // });
 });
 
 // (async ()=>{
@@ -69,9 +117,9 @@ describe(`MongoDriver this test only works with a valid Mongo DB ${JSON.stringif
 //
 //
 // (async ()=>{
+//     console.log('\n\nshould return an object from the db');
 //     const id = '1';
 //     const [err,result] = await aap(mongoDriver.get({ id }));
-//     console.log('\n\nshould return an object from the db');
 //     console.log('2ERR', err);
 //     console.log('2result', result);
 // })();
@@ -93,10 +141,12 @@ describe(`MongoDriver this test only works with a valid Mongo DB ${JSON.stringif
 //
 //
 // (async ()=>{
-//     const id = '10';
-//     const [err,result] = await aap(mongoDriver.destroy(id));
 //     console.log('\n\nshould return true if destroyed');
-//     console.log('4ERR', err);
-//     console.log('4result', result);
-//     process.exit();
-// })();
+//     const id = '12';
+//     // const [err,result] = await aap(mongoDriver.destroy(id));
+//     // console.log('4ERR', err);
+//     // console.log('4result', result);
+//     // process.exit();
+// // })();
+//
+// Promise.resolve().then(()=>mongoDriver.destroy(id)).then((a)=>console.log('success',a)).catch((a)=>console.log('error',a));
