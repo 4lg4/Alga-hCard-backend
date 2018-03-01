@@ -51,7 +51,7 @@ export default class Server {
     this._initializeServerRoutes();
 
     app.listen(this.props.port, ()=> {
-      console.log(`App listening on port ${this.props.port}!`);
+      console.log(`App listening on http://localhost:${this.props.port} 🙌`);
     });
   }
 

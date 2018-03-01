@@ -51,7 +51,8 @@ const expected = `
   <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="icon" href="img/favicon.png" type="image/x-icon"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
       <title>Live hCard Preview</title>
   
       <link href="css/bootstrap.min.css" rel="stylesheet" >

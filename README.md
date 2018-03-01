@@ -1,21 +1,21 @@
 # Alga-hCard-backend
 Alga hCard backend implementation
 
-
-### Production
-1) install production libraries
+#### Get Started
 ````bash
-    NODE_ENV=production npm install
+    npm install
 ````
-2) build the project
+
+#### Production
+1) build the project
 ````bash
     npm run build
 ````
-3) serve locally
+2) serve locally
 ````bash
     PORT=8888 npm run start-local
 ````
-or Dockerizeme!
+2) or Dockerizeme!
 ***** must have docker installed ****
 ````bash
     npm run dockerizeme
@@ -24,16 +24,21 @@ or Dockerizeme!
     PORT=8888 npm run docker-dev
 ````
 
-### Development
-1) to install development libraries 
+#### Development
 ````bash
-    NODE_ENV=development npm install
+    PORT=8888 npm run dev
 ````
-2) run tests
+
+#### Test
 ````bash
     npm run test
 ````
-3) serve locally the dev code
-````bash
-    npm run dev
-````
+
+
+
+## Author
+Alga Leal (4lg4) 
+
+- [http://alga.me](http://alga.me)
+- [https://www.linkedin.com/in/akgleal](https://www.linkedin.com/in/akgleal)
+- [https://github.com/4lg4](https://github.com/4lg4)
