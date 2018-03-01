@@ -47,7 +47,14 @@ add creds in the config file /src/env.json
 ````
 
 
-
+##### TAGS
+- Google eslint
+- Mocha+Chai
+- EJS (templates)
+- Express
+- Mongodb
+- Docker
+ 
 ## Author
 Alga Leal (4lg4) 
 
