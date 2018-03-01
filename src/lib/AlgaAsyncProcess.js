@@ -2,19 +2,20 @@
  * Created by www.Alga.me on 27/2/18.
  */
 
-export default async (promise) => {
-    try {
-        return [null, await promise];
-    } catch (err){
-        return [err];
-    }
+const AlgaAsyncProcess = async (promise) => {
+  try {
+    return [null, await promise];
+  } catch (err) {
+    return [err];
+  }
 };
 
+export default AlgaAsyncProcess;
 
-module.exports.reject = (messsage)=>{
-    return Promise.reject(messsage);
+module.exports.reject = (messsage)=> {
+  return Promise.reject(messsage);
 };
 
-module.exports.resolve = (data)=>{
-    return Promise.resolve(data);
+module.exports.resolve = (data)=> {
+  return Promise.resolve(data);
 };

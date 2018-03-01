@@ -3,7 +3,7 @@
  */
 
 // reference (http://microformats.org/wiki/hcard)
-export default (data)=>{
+export default (data)=> {
     const {
         givenName, surname, email, phone,
         houseNumber, street, suburb, state,
