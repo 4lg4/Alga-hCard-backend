@@ -19,9 +19,11 @@
   },
   "homepage": "https://github.com/4lg4/Alga-hCard-backend#readme",
   "dependencies": {
+    "browserify": "^16.1.0",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
+    "literalify": "^0.4.0",
     "mongoose": "^5.0.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
