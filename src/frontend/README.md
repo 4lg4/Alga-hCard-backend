@@ -80,8 +80,6 @@ suburb=Pyrmont
   var hCardComponent = require('./dist/main.js').default;
   ```
 
-console.log(rendered);
-
 ### Guidelines
 
 * We are interested in your coding style and how you solve problems.

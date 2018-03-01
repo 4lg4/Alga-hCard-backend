@@ -4,6 +4,20 @@
 import ejs from 'ejs';
 import path from 'path';
 
+//
+// [ini] TODO: verify this workarounds to make the bundle render in the server
+//
+import React from 'react';
+import {renderToString} from 'react-dom/server';
+import PropTypes from 'prop-types';
+React.PropTypes = PropTypes;
+global.window = {React};
+global.window.hCard = require('../frontend/main');
+// global.window.hCard = require('../frontend/main_unminified'); // TODO: used as a debug version
+//
+// [end] TODO: verify this workarounds to make the bundle render in the server
+//
+
 import aap, {reject, resolve} from './AlgaAsyncProcess';
 import hCardTemplate from './hCardTemplate';
 
@@ -16,11 +30,17 @@ module.exports.getIndex = async ({id, message, db}) => {
 
   hCardProps = (hCardProps && hCardProps.data) ? hCardProps.data : {};
   hCardProps.id = id;
-  hCardProps = JSON.stringify(hCardProps);
+
+  const hCard = renderToString(
+    React.createElement(
+      window.hCard.default,
+      hCardProps
+    )
+  );
 
   let [errTemplate, resultTemplate] = await aap(
     new Promise((resolve,reject)=> {
-      ejs.renderFile(path.join(__dirname, '../frontend/index.ejs'), {hCardProps}, null, (err, str)=> {
+      ejs.renderFile(path.join(__dirname, '../frontend/index.ejs'), {hCardProps: JSON.stringify(hCardProps), hCard}, null, (err, str)=> {
         if (err) {
           return reject(err);
         }

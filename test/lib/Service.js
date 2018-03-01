@@ -25,6 +25,26 @@ const db = {
   }
 };
 
+//
+// [ini] TODO: verify this workarounds to make the bundle render in the server
+//
+import React from 'react';
+import {renderToString} from 'react-dom/server';
+import PropTypes from 'prop-types';
+React.PropTypes = PropTypes;
+global.window = {React};
+global.window.hCard = require('../../src/frontend/main');
+//
+// [end] TODO: verify this workarounds to make the bundle render in the server
+//
+
+const hCard = renderToString(
+  React.createElement(
+    window.hCard.default,
+    data
+  )
+);
+
 const expected = `
   <!DOCTYPE html>
   <html lang="en">
@@ -39,23 +59,25 @@ const expected = `
   </head>
   
   <body>
-      <div class="HcardApp" />
+      <div class="HcardApp">
+        ${hCard}
+      </div>
   
       <script src="https://unpkg.com/react@15/dist/react.js"></script>
       <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
       <script src="main.js"></script>
       <script>
-          var hCardProps = ${JSON.stringify(data)};
+        var hCardProps = ${JSON.stringify(data)};
   
-          (function() {
-              ReactDOM.render(
-                  React.createElement(
-                      window.hCard.default,
-                      hCardProps
-                  ),
-                  document.querySelector('.HcardApp')
-              );
-          })();
+        (function() {
+          ReactDOM.render(
+            React.createElement(
+              window.hCard.default,
+              hCardProps
+            ),
+            document.querySelector('.HcardApp')
+          );
+        })();
       </script>
   
   </body>
